@@ -1,0 +1,11 @@
+app:
+  name: 分布式对象存储
+chunk:
+  averageSize: 8
+  minSize: 4
+  maxSize: 12
+  normalization: 2
+  disableNormalization: true
+uploadFilePath:
+  path: /Users/xylophone/code/go/text.txt
+
