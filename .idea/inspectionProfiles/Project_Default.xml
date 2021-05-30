@@ -17,6 +17,7 @@
         <method importPath="os" receiver="*File" name="Close" />
         <method importPath="net" receiver="Conn" name="Close" />
         <method importPath="net" receiver="Listener" name="Close" />
+        <method importPath="DDSS/client/internal/metafile" receiver="*ReadFile" name="Close" />
       </methods>
     </inspection_tool>
   </profile>

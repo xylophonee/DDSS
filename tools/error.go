@@ -10,5 +10,3 @@ func Error(err error,s string){
 	log.Print(err)
 	log.Println(s)
 }
-
-//func奥术大师git
