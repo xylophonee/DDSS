@@ -11,4 +11,4 @@ func Error(err error,s string){
 	log.Println(s)
 }
 
-//func奥术大师
+//func奥术大师git
