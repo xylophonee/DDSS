@@ -5,6 +5,6 @@
  */
 package operate
 
-func (o *Operate) get()  {
+func (o *Operate) Get()  {
 
 }

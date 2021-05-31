@@ -6,7 +6,9 @@
 package esSearch
 
 import (
+	"DDSS/tools"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/olivere/elastic/v7"
 )
@@ -91,4 +93,23 @@ func (e *ESClient) SearchMeta(hash string,size int64)(hit bool,chunksHash []stri
 	}
 
 	return false,nil
+}
+
+func (e *ESClient) DeleteMeta(hash string) bool{
+	q := elastic.NewTermQuery("hash",hash)
+	res, err := e.Client.DeleteByQuery().
+		Index(e.index).
+		Query(q).
+		Pretty(true).
+		Do(e.ctx)
+	if err!=nil{
+		tools.Error(err,"删除错误")
+		return false
+	}
+	if res == nil{
+		err := errors.New("未找到要删除的数据")
+		tools.Error(err,"未找到要删除的数据")
+		return false
+	}
+	return true
 }

@@ -5,10 +5,13 @@
  */
 package operate
 
-type Operate struct {
+import "DDSS/client/internal/esSearch"
 
+type Operate struct {
+	esFile esSearch.ESClient
+	esChunks esSearch.ESClient
 }
 
-func NewOperate()Operate{
-	return Operate{}
+func NewOperate(esFile,esChunks esSearch.ESClient)Operate{
+	return Operate{esFile: esFile,esChunks: esChunks}
 }

@@ -85,7 +85,7 @@ func putDataOperate(wg *sync.WaitGroup, chunksChan chan fastcdc.Chunk, errorChan
 	wg.Done()
 }
 
-//goOperate 复制发送数据
+//goOperate 负责发送数据
 func goOperate(tcpClient *tcp.TcpClient,c *fastcdc.Chunk,errorChan chan error){
 	cmd := tcp.Cmd{Name: "PUT", Hash: c.Hash, Size: int64(c.Length), Data: c.Data, Error: nil}
 	tcpClient.Run(&cmd)

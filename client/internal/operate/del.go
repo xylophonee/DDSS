@@ -5,6 +5,6 @@
  */
 package operate
 
-func (o *Operate) del()  {
+func (o *Operate) Del(hash string)  {
 
 }

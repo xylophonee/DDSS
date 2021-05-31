@@ -1,5 +1,10 @@
 package main
 
+import (
+	"DDSS/client/internal/esSearch"
+	"DDSS/client/internal/operate"
+)
+
 const (
 
 	ip0 ="127.0.0.1:8080"
@@ -13,7 +18,13 @@ const (
 
 func main(){
 	//启动服务
+	esFile, _ := esSearch.NewESClient("file")
+	esChunks, _ := esSearch.NewESClient("chunks")
+	operate := operate.NewOperate(esFile,esChunks)
+	operate.Put("")
 }
+
+
 
 //func PUT(path string)  {
 //
