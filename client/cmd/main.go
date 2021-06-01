@@ -5,23 +5,23 @@ import (
 	"DDSS/client/internal/operate"
 )
 
-const (
-
-	ip0 ="127.0.0.1:8080"
-	ip1 ="127.0.0.1:8081"
-	ip2 ="127.0.0.1:8082"
-	ip3 ="127.0.0.1:8083"
-	ip4 ="127.0.0.1:8084"
-	ip5 ="127.0.0.1:8085"
-
-)
+//const (
+//
+//	ip0 ="127.0.0.1:8080"
+//	ip1 ="127.0.0.1:8081"
+//	ip2 ="127.0.0.1:8082"
+//	ip3 ="127.0.0.1:8083"
+//	ip4 ="127.0.0.1:8084"
+//	ip5 ="127.0.0.1:8085"
+//
+//)
 
 func main(){
 	//启动服务
 	esFile, _ := esSearch.NewESClient("file")
 	esChunks, _ := esSearch.NewESClient("chunks")
 	operate := operate.NewOperate(esFile,esChunks)
-	operate.Put("")
+	operate.Put("/Users/xylophone/Downloads/Go语言实战.pdf")
 }
 
 

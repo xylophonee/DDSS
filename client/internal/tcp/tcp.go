@@ -48,7 +48,7 @@ func (c *TcpClient) Run(cmd *Cmd) {
 			cmd.Error = err
 			return
 		}
-		_, cmd.Error = c.recvResponse()
+		cmd.Size, cmd.Error = c.recvResponse()
 	}
 	if cmd.Name == "del" {
 		c.sendDel(cmd.Hash)
@@ -58,7 +58,7 @@ func (c *TcpClient) Run(cmd *Cmd) {
 	panic("unknown cmd name " + cmd.Name)
 }
 
-func (c *TcpClient) recvResponse() (int, error) {
+func (c *TcpClient) recvResponse() (int64, error) {
 	vlen := readLen(c.r)
 	if vlen == 0 {
 		return 0, nil
@@ -77,7 +77,7 @@ func (c *TcpClient) recvResponse() (int, error) {
 		return 0, e
 	}
 	v, e := strconv.Atoi(string(value))
-	return v, nil
+	return int64(v), nil
 }
 
 func readLen(r *bufio.Reader) int {

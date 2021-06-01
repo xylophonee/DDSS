@@ -11,6 +11,7 @@ import (
 	"DDSS/client/internal/tcp"
 	"DDSS/tools"
 	"bytes"
+	"errors"
 	"fmt"
 	"github.com/jotfs/fastcdc-go"
 	"io"
@@ -67,7 +68,9 @@ func PutChunksData(f *os.File,esChunks esSearch.ESClient)(chunksHash []string){
 
 
 func putDataOperate(wg *sync.WaitGroup, chunksChan chan fastcdc.Chunk, errorChan chan error){
+	var wgg sync.WaitGroup
 	tcpClient := tcp.NewTCPClient()
+	defer tcpClient.Close()
 	exit := false
 	for {
 		if !exit {
@@ -75,23 +78,29 @@ func putDataOperate(wg *sync.WaitGroup, chunksChan chan fastcdc.Chunk, errorChan
 			case <-errorChan:
 				exit = true
 			case c := <-chunksChan:
-				go goOperate(tcpClient,&c,errorChan)
+				wgg.Add(1)
+				go goOperate(&wgg,tcpClient,&c,errorChan)
 			}
 		} else {
+			wg.Done()
 			break
 		}
 	}
-
-	wg.Done()
+	wgg.Wait()
 }
 
 //goOperate 负责发送数据
-func goOperate(tcpClient *tcp.TcpClient,c *fastcdc.Chunk,errorChan chan error){
+func goOperate(wg *sync.WaitGroup,tcpClient *tcp.TcpClient,c *fastcdc.Chunk,errorChan chan error){
 	cmd := tcp.Cmd{Name: "PUT", Hash: c.Hash, Size: int64(c.Length), Data: c.Data, Error: nil}
 	tcpClient.Run(&cmd)
+	if cmd.Size != int64(len(cmd.Data)){
+		err := errors.New("发送端和接收端的数据长度不一致")
+		errorChan <- err
+	}
 	if cmd.Error != nil{
 		errorChan <- cmd.Error
 	}
+	wg.Done()
 }
 
 func SendData(wg *sync.WaitGroup, chunksChan chan fastcdc.Chunk, errorChan chan error) {

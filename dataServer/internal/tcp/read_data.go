@@ -39,14 +39,15 @@ func readLen(r *bufio.Reader) (int, error) {
 	return l, nil
 }
 
-func sendResponse(value []byte, err error, conn net.Conn) error {
+func sendResponse(lens int, err error, conn net.Conn) error {
 	if err != nil {
 		errString := err.Error()
 		tmp := fmt.Sprintf("-%d ", len(errString)) + errString
 		_, e := conn.Write([]byte(tmp))
 		return e
 	}
-	vlen := fmt.Sprintf("%d ", len(value))
-	_, e := conn.Write(append([]byte(vlen), value...))
+	vlen := len(strconv.Itoa(lens))
+	message := fmt.Sprintf("%d ", vlen) + string(rune(lens))
+	_, e := conn.Write([]byte(message))
 	return e
 }
