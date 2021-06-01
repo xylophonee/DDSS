@@ -26,7 +26,6 @@ func (o *Operate)Put(path string)  {
 	exist,chunksHash := o.esFile.SearchMeta(f.Stat.Hash,f.Stat.Size)
 	//不存在则进行分块去重
 	if !exist{
-
 		//小于4K不分块
 		if f.Stat.Size < 4000{
 			//todo 是否需要存储到chunk es？

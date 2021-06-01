@@ -26,7 +26,7 @@ func (s *Server)put(conn net.Conn, r *bufio.Reader)error{
 	fmt.Printf("接收到%d.\n", len(data))
 	hash := tools.HashByteToString(tools.CalHash(data))
 	err = s.b.PutChunk(hash, data)
-	return err
+	return sendResponse([]byte(string(rune(len(data)))),err,conn)
 }
 
 func (s *Server)del(conn net.Conn, r *bufio.Reader)error{

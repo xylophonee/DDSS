@@ -36,7 +36,7 @@ func (c *TcpClient) sendDel(key string) {
 func (c *TcpClient) Run(cmd *Cmd) {
 	if cmd.Name == "get" {
 		c.sendGet(cmd.Hash)
-		cmd.Data, cmd.Error = c.recvResponse()
+		_, cmd.Error = c.recvResponse()
 		return
 	}
 	if cmd.Name == "PUT" {
@@ -48,8 +48,7 @@ func (c *TcpClient) Run(cmd *Cmd) {
 			cmd.Error = err
 			return
 		}
-		//_, cmd.Error = c.recvResponse()
-		return
+		_, cmd.Error = c.recvResponse()
 	}
 	if cmd.Name == "del" {
 		c.sendDel(cmd.Hash)
@@ -59,25 +58,26 @@ func (c *TcpClient) Run(cmd *Cmd) {
 	panic("unknown cmd name " + cmd.Name)
 }
 
-func (c *TcpClient) recvResponse() ([]byte, error) {
+func (c *TcpClient) recvResponse() (int, error) {
 	vlen := readLen(c.r)
 	if vlen == 0 {
-		return nil, nil
+		return 0, nil
 	}
 	if vlen < 0 {
 		err := make([]byte, -vlen)
 		_, e := io.ReadFull(c.r, err)
 		if e != nil {
-			return nil, e
+			return 0, e
 		}
-		return nil, errors.New(string(err))
+		return 0, errors.New(string(err))
 	}
 	value := make([]byte, vlen)
 	_, e := io.ReadFull(c.r, value)
 	if e != nil {
-		return nil, e
+		return 0, e
 	}
-	return value, nil
+	v, e := strconv.Atoi(string(value))
+	return v, nil
 }
 
 func readLen(r *bufio.Reader) int {
